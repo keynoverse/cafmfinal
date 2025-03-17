@@ -11,13 +11,23 @@ try {
     $userType = str_replace('Form', '', $_POST['formId']);
     
     // Basic validation
-    if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['mobile'])) {
-        throw new Exception('Please fill in all required fields.');
+    if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['mobile']) || empty($_POST['password'])) {
+        throw new Exception('Please fill in all required fields including password.');
     }
     
     // Validate email format
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         throw new Exception('Invalid email format.');
+    }
+    
+    // Validate password
+    if (strlen($_POST['password']) < 8) {
+        throw new Exception('Password must be at least 8 characters long.');
+    }
+    
+    // Validate password confirmation
+    if ($_POST['password'] !== $_POST['confirm_password']) {
+        throw new Exception('Passwords do not match.');
     }
     
     // Validate mobile number
@@ -27,10 +37,10 @@ try {
     }
     
     // Check if email already exists
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $_POST['email']);
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
+    $stmt->bindValue(':email', $_POST['email']);
     $stmt->execute();
-    if ($stmt->get_result()->num_rows > 0) {
+    if ($stmt->fetch(PDO::FETCH_ASSOC)) {
         throw new Exception('Email already registered.');
     }
     
@@ -116,10 +126,13 @@ try {
     // Generate verification token
     $verificationToken = bin2hex(random_bytes(32));
     
+    // Hash password
+    $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    
     // Insert user data
     $stmt = $conn->prepare("
-        INSERT INTO users (name, email, mobile, user_type, verification_token, additional_data, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, NOW())
+        INSERT INTO users (name, email, mobile, user_type, verification_token, password_hash, additional_data, created_at)
+        VALUES (:name, :email, :mobile, :user_type, :verification_token, :password_hash, :additional_data, NOW())
     ");
     
     // Prepare additional data based on user type
@@ -168,14 +181,14 @@ try {
     }
     
     $additionalDataJson = json_encode($additionalData);
-    $stmt->bind_param("ssssss", 
-        $_POST['name'],
-        $_POST['email'],
-        $_POST['mobile'],
-        $userType,
-        $verificationToken,
-        $additionalDataJson
-    );
+    
+    $stmt->bindValue(':name', $_POST['name']);
+    $stmt->bindValue(':email', $_POST['email']);
+    $stmt->bindValue(':mobile', $_POST['mobile']);
+    $stmt->bindValue(':user_type', $userType);
+    $stmt->bindValue(':verification_token', $verificationToken);
+    $stmt->bindValue(':password_hash', $passwordHash);
+    $stmt->bindValue(':additional_data', $additionalDataJson);
     
     if (!$stmt->execute()) {
         throw new Exception('Failed to create user account.');

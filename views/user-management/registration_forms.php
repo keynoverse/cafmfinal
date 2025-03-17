@@ -20,6 +20,16 @@
     </div>
     
     <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
         <label>Company Type</label>
         <select name="company_type" class="form-control" required>
             <option value="expo">Expo City</option>
@@ -75,6 +85,16 @@
     </div>
     
     <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
         <label>Company Name</label>
         <input type="text" name="company_name" class="form-control" required>
     </div>
@@ -119,6 +139,16 @@
     </div>
     
     <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
         <label>Department</label>
         <select name="department" class="form-control" required>
             <option value="">Select Department</option>
@@ -158,6 +188,16 @@
     </div>
     
     <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
         <label>Organization</label>
         <input type="text" name="organization" class="form-control" required>
     </div>
@@ -193,6 +233,16 @@
     <div class="form-group">
         <label>Email</label>
         <input type="email" name="email" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required minlength="8">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="8">
     </div>
     
     <div class="form-group">

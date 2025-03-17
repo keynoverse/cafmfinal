@@ -9,6 +9,7 @@ class FormValidator {
         this.validateRequired();
         this.validateEmail();
         this.validateMobile();
+        this.validatePasswords();
         this.validateFileTypes();
         this.validateFileSize();
         
@@ -44,6 +45,22 @@ class FormValidator {
             this.showError(mobile, 'Please enter a valid mobile number');
         } else {
             this.removeError(mobile);
+        }
+    }
+
+    validatePasswords() {
+        const password = this.form.querySelector('[name="password"]');
+        const confirmPassword = this.form.querySelector('[name="confirm_password"]');
+        
+        if (!password || !confirmPassword) return;
+        
+        if (password.value.length < 8) {
+            this.showError(password, 'Password must be at least 8 characters long');
+        } else if (password.value !== confirmPassword.value) {
+            this.showError(confirmPassword, 'Passwords do not match');
+        } else {
+            this.removeError(password);
+            this.removeError(confirmPassword);
         }
     }
 
