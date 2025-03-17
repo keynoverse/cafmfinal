@@ -39,6 +39,10 @@ class FormValidator {
                 body: `field=email&value=${encodeURIComponent(email.value)}`
             });
             
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const result = await response.json();
             if (!result.valid) {
                 this.showError(email, result.message);
@@ -54,6 +58,10 @@ class FormValidator {
                 body: `email=${encodeURIComponent(email.value)}`
             });
             
+            if (!availabilityResponse.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const availabilityResult = await availabilityResponse.json();
             if (!availabilityResult.available) {
                 this.showError(email, availabilityResult.message);
@@ -62,6 +70,7 @@ class FormValidator {
             }
         } catch (error) {
             console.error('Email validation error:', error);
+            this.showError(email, 'Error validating email. Please try again.');
         }
     }
 
@@ -78,6 +87,10 @@ class FormValidator {
                 body: `field=mobile&value=${encodeURIComponent(mobile.value)}`
             });
             
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const result = await response.json();
             if (!result.valid) {
                 this.showError(mobile, result.message);
@@ -86,6 +99,7 @@ class FormValidator {
             }
         } catch (error) {
             console.error('Mobile validation error:', error);
+            this.showError(mobile, 'Error validating mobile number. Please try again.');
         }
     }
 
@@ -412,4 +426,25 @@ document.addEventListener('DOMContentLoaded', function() {
             alertDiv.remove();
         }, 5000);
     }
+
+    // Initialize form validation
+    const forms = document.querySelectorAll('.registration-form');
+    forms.forEach(form => {
+        const validator = new FormValidator(form);
+        
+        // Add input event listeners for real-time validation
+        form.querySelectorAll('input').forEach(field => {
+            let timeout;
+            field.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(async () => {
+                    if (field.name === 'email') {
+                        await validator.validateEmail();
+                    } else if (field.name === 'mobile') {
+                        await validator.validateMobile();
+                    }
+                }, 500); // Debounce validation
+            });
+        });
+    });
 }); 

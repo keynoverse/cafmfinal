@@ -3,7 +3,7 @@
 define('PROJECT_ROOT', dirname(__DIR__));
 
 // Database configuration
-define('DB_HOST', '192.168.1.16');
+define('DB_HOST', 'localhost');
 define('DB_USER', 'samurysam');
 define('DB_PASS', '9571840084');
 define('DB_NAME', 'cafm_db');
