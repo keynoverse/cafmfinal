@@ -2,6 +2,10 @@
 require_once '../config/config.php';
 require_once PROJECT_ROOT . '/controllers/AuthController.php';
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $auth = new AuthController($conn);
 if ($auth->isLoggedIn()) {
     header('Location: ../dashboard/index.php');
@@ -11,13 +15,24 @@ if ($auth->isLoggedIn()) {
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
+        // Log login attempt
+        error_log("Login attempt for email: " . ($_POST['email'] ?? 'not set'));
+        
+        // Validate input
+        if (empty($_POST['email']) || empty($_POST['password'])) {
+            throw new Exception('Email and password are required');
+        }
+
         if ($auth->login($_POST['email'], $_POST['password'])) {
+            error_log("Login successful, redirecting to dashboard");
             header('Location: ../dashboard/index.php');
             exit;
         } else {
+            error_log("Login failed for user: " . $_POST['email']);
             $error = 'Invalid email or password';
         }
     } catch (Exception $e) {
+        error_log("Login error: " . $e->getMessage());
         $error = $e->getMessage();
     }
 }

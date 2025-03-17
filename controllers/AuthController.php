@@ -14,30 +14,35 @@ class AuthController {
     
     public function login($email, $password) {
         try {
+            // Get user by email
             $stmt = $this->conn->prepare("
                 SELECT id, name, email, password_hash, user_type, is_verified, is_active 
                 FROM users 
-                WHERE email = ?
+                WHERE email = :email
             ");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $stmt->execute(['email' => $email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($result->num_rows === 0) {
+            if (!$user) {
+                error_log("Login failed: User not found - " . $email);
                 return false;
             }
 
-            $user = $result->fetch_assoc();
-
+            // Verify password
             if (!password_verify($password, $user['password_hash'])) {
+                error_log("Login failed: Invalid password for user - " . $email);
                 return false;
             }
 
+            // Check if user is verified
             if (!$user['is_verified']) {
+                error_log("Login failed: User not verified - " . $email);
                 return false;
             }
 
+            // Check if user is active
             if (!$user['is_active']) {
+                error_log("Login failed: User not active - " . $email);
                 return false;
             }
 
@@ -49,11 +54,16 @@ class AuthController {
             $_SESSION['last_activity'] = time();
 
             // Update last login timestamp
-            $stmt = $this->conn->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
-            $stmt->bind_param("i", $user['id']);
-            $stmt->execute();
+            $stmt = $this->conn->prepare("
+                UPDATE users 
+                SET last_login = NOW() 
+                WHERE id = :id
+            ");
+            $stmt->execute(['id' => $user['id']]);
 
+            error_log("Login successful for user: " . $email);
             return true;
+
         } catch (Exception $e) {
             error_log("Login error: " . $e->getMessage());
             return false;
@@ -97,17 +107,16 @@ class AuthController {
             $stmt = $this->conn->prepare("
                 SELECT id, name, email, user_type, is_verified, is_active, last_login, created_at 
                 FROM users 
-                WHERE id = ?
+                WHERE id = :id
             ");
-            $stmt->bind_param("i", $_SESSION['user_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $stmt->execute(['id' => $_SESSION['user_id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($result->num_rows === 0) {
+            if (!$user) {
                 return null;
             }
             
-            return $result->fetch_assoc();
+            return $user;
         } catch (Exception $e) {
             error_log("Error fetching current user: " . $e->getMessage());
             return [
