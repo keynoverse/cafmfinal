@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.success) {
                     showMessage('success', 'Registration successful! Please check your email for verification.');
                     setTimeout(() => {
-                        window.location.href = '../login.php';
+                        window.location.href = '../public/login.php';
                     }, 3000);
                 } else {
                     showMessage('error', result.message || 'Registration failed. Please try again.');
