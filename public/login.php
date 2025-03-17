@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
             
-            <form method="POST" action="">
+            <form method="POST" action="" id="loginForm">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" 
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                            placeholder="Enter your password">
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-primary btn-block" id="loginButton">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
 
@@ -151,5 +151,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script src="../assets/js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disable the button to prevent double submission
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+            // Get form data
+            const formData = new FormData(this);
+
+            // Submit the form using fetch
+            fetch(loginForm.action || window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Check if the response contains a success redirect
+                if (html.includes('Location: ../dashboard/index.php')) {
+                    window.location.href = '../dashboard/index.php';
+                } else {
+                    // If there's an error, the page will be reloaded with the error message
+                    document.documentElement.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Re-enable the button on error
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                // Show error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = 'An error occurred. Please try again.';
+                loginForm.insertBefore(errorDiv, loginForm.firstChild);
+            });
+        });
+    });
+    </script>
 </body>
 </html> 
