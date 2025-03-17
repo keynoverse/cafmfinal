@@ -45,15 +45,15 @@ if ($auth->isLoggedIn()) {
     </header>
 
     <section class="hero">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Next-Generation Facility Management</h1>
             <p>AI-Powered CAFM System for Smart Building Management</p>
             <div class="hero-buttons">
                 <a href="public/register.php" class="btn btn-primary">Get Started</a>
-                <a href="#demo" class="btn btn-secondary">Watch Demo</a>
+                <a href="#demo" class="btn btn-secondary"><i class="fas fa-play-circle"></i> Watch Demo</a>
             </div>
         </div>
-        <div class="hero-overlay"></div>
     </section>
 
     <section id="features" class="features">
@@ -249,35 +249,48 @@ if ($auth->isLoggedIn()) {
                 <h2>What Our Clients Say</h2>
                 <p>Hear from organizations that have transformed their facility management with our solution</p>
             </div>
-            <div class="testimonial-slider">
+            <div class="testimonials-slider">
                 <div class="testimonial-item">
                     <div class="testimonial-content">
-                        <p>"The CAFM system has revolutionized how we manage our facilities. The predictive maintenance alone has saved us thousands in repair costs."</p>
+                        <p class="testimonial-text">"The CAFM system has revolutionized how we manage our facilities. The predictive maintenance alone has saved us thousands in repair costs. The interface is intuitive and our team adapted to it quickly."</p>
                     </div>
                     <div class="testimonial-author">
                         <img src="assets/images/testimonial1.jpg" alt="Testimonial Author">
                         <div class="author-info">
-                            <h4>Sarah Johnson</h4>
-                            <p>Facilities Director, Global Enterprises</p>
+                            <h4 class="author-name">Sarah Johnson</h4>
+                            <p class="author-title">Facilities Director, Global Enterprises</p>
                         </div>
                     </div>
                 </div>
                 <div class="testimonial-item">
                     <div class="testimonial-content">
-                        <p>"The mobile workforce module has been a game-changer for our team. We've seen response times cut in half and customer satisfaction soar."</p>
+                        <p class="testimonial-text">"The mobile workforce module has been a game-changer for our team. We've seen response times cut in half and customer satisfaction soar. The analytics provide valuable insights for continuous improvement."</p>
                     </div>
                     <div class="testimonial-author">
                         <img src="assets/images/testimonial2.jpg" alt="Testimonial Author">
                         <div class="author-info">
-                            <h4>Michael Chen</h4>
-                            <p>Operations Manager, Tech Innovations</p>
+                            <h4 class="author-name">Michael Chen</h4>
+                            <p class="author-title">Operations Manager, Tech Innovations</p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
+                <div class="testimonial-item">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Implementing this CAFM system was the best decision we made last year. The energy management module alone has reduced our costs by 30%, and the space optimization tools have transformed how we utilize our campus."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="assets/images/testimonial3.jpg" alt="Testimonial Author">
+                        <div class="author-info">
+                            <h4 class="author-name">Emily Rodriguez</h4>
+                            <p class="author-title">Sustainability Director, University of Innovation</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
             </div>
         </div>
     </section>
@@ -351,68 +364,41 @@ if ($auth->isLoggedIn()) {
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#modules">Modules</a></li>
-                    <li><a href="#benefits">Benefits</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Solutions</h4>
-                <ul>
-                    <li><a href="#">For Corporate Offices</a></li>
-                    <li><a href="#">For Healthcare Facilities</a></li>
-                    <li><a href="#">For Educational Institutions</a></li>
-                    <li><a href="#">For Retail Spaces</a></li>
-                    <li><a href="#">For Government Buildings</a></li>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#features"><i class="fas fa-chevron-right"></i> Features</a></li>
+                    <li><a href="#modules"><i class="fas fa-chevron-right"></i> Modules</a></li>
+                    <li><a href="#benefits"><i class="fas fa-chevron-right"></i> Benefits</a></li>
+                    <li><a href="#testimonials"><i class="fas fa-chevron-right"></i> Testimonials</a></li>
+                    <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Contact Info</h4>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Business Avenue, Tech District</p>
-                <p><i class="fas fa-phone"></i> +1 234 567 890</p>
-                <p><i class="fas fa-envelope"></i> info@cafm-system.com</p>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Business Avenue, Tech District</a></li>
+                    <li><a href="tel:+12345678900"><i class="fas fa-phone"></i> +1 234 567 8900</a></li>
+                    <li><a href="mailto:info@cafm-system.com"><i class="fas fa-envelope"></i> info@cafm-system.com</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> Mon-Fri: 9:00 AM - 5:00 PM</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-newsletter">
+                <h4>Newsletter</h4>
+                <p>Subscribe to our newsletter to receive updates and news about our products.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+                <p>We respect your privacy and will never share your information.</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 CAFM System. All rights reserved.</p>
+            <p>&copy; 2023 CAFM System. All rights reserved. | Designed with <i class="fas fa-heart"></i> for facility managers</p>
         </div>
     </footer>
 
     <script src="assets/js/main.js"></script>
-    <script>
-        // Simple testimonial slider
-        document.addEventListener('DOMContentLoaded', function() {
-            const testimonials = document.querySelectorAll('.testimonial-item');
-            const dots = document.querySelectorAll('.dot');
-            let currentIndex = 0;
-
-            function showTestimonial(index) {
-                testimonials.forEach(item => item.style.display = 'none');
-                dots.forEach(dot => dot.classList.remove('active'));
-                
-                testimonials[index].style.display = 'block';
-                dots[index].classList.add('active');
-            }
-
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    currentIndex = index;
-                    showTestimonial(currentIndex);
-                });
-            });
-
-            // Auto-rotate testimonials
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % testimonials.length;
-                showTestimonial(currentIndex);
-            }, 5000);
-
-            // Initialize
-            showTestimonial(currentIndex);
-        });
-    </script>
+    <script src="assets/js/home-slider.js"></script>
+    <script src="assets/js/testimonials-slider.js"></script>
 </body>
 </html> 
