@@ -1,8 +1,14 @@
 <?php
-require_once '../../config/config.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
 
 // Set headers for JSON response
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
 try {
     // Get field and value from POST request
@@ -43,6 +49,7 @@ try {
     echo json_encode($response);
 
 } catch (Exception $e) {
+    error_log("Validation error: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'valid' => false,

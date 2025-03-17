@@ -31,7 +31,7 @@ class FormValidator {
         if (!email || !email.value.trim()) return;
         
         try {
-            const response = await fetch('/public/validation/validate_field.php', {
+            const response = await fetch('/cafm/public/validation/validate_field.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,7 +50,7 @@ class FormValidator {
             }
 
             // Check email availability
-            const availabilityResponse = await fetch('/public/validation/check_email.php', {
+            const availabilityResponse = await fetch('/cafm/public/validation/check_email.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -79,7 +79,7 @@ class FormValidator {
         if (!mobile || !mobile.value.trim()) return;
         
         try {
-            const response = await fetch('/public/validation/validate_field.php', {
+            const response = await fetch('/cafm/public/validation/validate_field.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
