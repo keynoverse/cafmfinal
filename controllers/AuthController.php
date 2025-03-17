@@ -1,5 +1,5 @@
 <?php
-require_once 'models/UserModel.php';
+require_once PROJECT_ROOT . '/models/UserModel.php';
 
 class AuthController {
     private $userModel;

@@ -1,7 +1,7 @@
 class FormValidator {
     constructor(form) {
         this.form = form;
-        this.errors = [];
+        this.errors = new Map();
     }
 
     validate() {
@@ -26,29 +26,66 @@ class FormValidator {
         });
     }
 
-    validateEmail() {
-        const emailInput = this.form.querySelector('input[type="email"]');
-        if (emailInput && emailInput.value) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value)) {
-                this.errors.push('Invalid email format');
-                this.showError(emailInput, 'Please enter a valid email address');
-            } else {
-                this.removeError(emailInput);
+    async validateEmail() {
+        const email = this.form.querySelector('[name="email"]');
+        if (!email || !email.value.trim()) return;
+        
+        try {
+            const response = await fetch('/public/validation/validate_field.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `field=email&value=${encodeURIComponent(email.value)}`
+            });
+            
+            const result = await response.json();
+            if (!result.valid) {
+                this.showError(email, result.message);
+                return;
             }
+
+            // Check email availability
+            const availabilityResponse = await fetch('/public/validation/check_email.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `email=${encodeURIComponent(email.value)}`
+            });
+            
+            const availabilityResult = await availabilityResponse.json();
+            if (!availabilityResult.available) {
+                this.showError(email, availabilityResult.message);
+            } else {
+                this.removeError(email);
+            }
+        } catch (error) {
+            console.error('Email validation error:', error);
         }
     }
 
-    validateMobile() {
-        const mobileInput = this.form.querySelector('input[name="mobile"]');
-        if (mobileInput && mobileInput.value) {
-            const mobileRegex = /^[0-9]{10,15}$/;
-            if (!mobileRegex.test(mobileInput.value.replace(/[- ]/g, ''))) {
-                this.errors.push('Invalid mobile number');
-                this.showError(mobileInput, 'Please enter a valid mobile number');
+    async validateMobile() {
+        const mobile = this.form.querySelector('[name="mobile"]');
+        if (!mobile || !mobile.value.trim()) return;
+        
+        try {
+            const response = await fetch('/public/validation/validate_field.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `field=mobile&value=${encodeURIComponent(mobile.value)}`
+            });
+            
+            const result = await response.json();
+            if (!result.valid) {
+                this.showError(mobile, result.message);
             } else {
-                this.removeError(mobileInput);
+                this.removeError(mobile);
             }
+        } catch (error) {
+            console.error('Mobile validation error:', error);
         }
     }
 
@@ -85,22 +122,29 @@ class FormValidator {
     }
 
     showError(element, message) {
-        let errorDiv = element.nextElementSibling;
-        if (!errorDiv || !errorDiv.classList.contains('error-message')) {
-            errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
+        this.errors.set(element, message);
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
         errorDiv.textContent = message;
+        
+        const existingError = element.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
         element.classList.add('error');
+        element.parentNode.appendChild(errorDiv);
     }
 
     removeError(element) {
-        const errorDiv = element.nextElementSibling;
-        if (errorDiv && errorDiv.classList.contains('error-message')) {
+        this.errors.delete(element);
+        element.classList.remove('error');
+        
+        const errorDiv = element.parentNode.querySelector('.error-message');
+        if (errorDiv) {
             errorDiv.remove();
         }
-        element.classList.remove('error');
     }
 }
 

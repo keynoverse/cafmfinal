@@ -8,10 +8,8 @@ class UserModel {
 
     public function createUser($data) {
         try {
-            $sql = "INSERT INTO users (name, email, password, mobile, company, 
-                    department, role_id, is_expo_city) 
-                    VALUES (:name, :email, :password, :mobile, :company, 
-                    :department, :role_id, :is_expo_city)";
+            $sql = "INSERT INTO users (name, email, password_hash, mobile, user_type) 
+                    VALUES (:name, :email, :password, :mobile, :user_type)";
             
             $stmt = $this->db->prepare($sql);
             
@@ -23,10 +21,7 @@ class UserModel {
                 'email' => $data['email'],
                 'password' => $hashedPassword,
                 'mobile' => $data['mobile'],
-                'company' => $data['company'],
-                'department' => $data['department'],
-                'role_id' => $data['role_id'],
-                'is_expo_city' => $data['is_expo_city'] ?? false
+                'user_type' => $data['user_type']
             ]);
         } catch (PDOException $e) {
             error_log("Error creating user: " . $e->getMessage());
@@ -47,9 +42,39 @@ class UserModel {
 
     public function validateLogin($email, $password) {
         $user = $this->getUserByEmail($email);
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['password_hash'])) {
             return $user;
         }
         return false;
+    }
+
+    public function updateUser($userId, $data) {
+        try {
+            $sql = "UPDATE users SET name = :name, mobile = :mobile, updated_at = NOW() 
+                    WHERE id = :id";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                'name' => $data['name'],
+                'mobile' => $data['mobile'],
+                'id' => $userId
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error updating user: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function verifyEmail($token) {
+        try {
+            $sql = "UPDATE users SET is_verified = 1, verification_token = NULL, 
+                    updated_at = NOW() WHERE verification_token = :token";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute(['token' => $token]);
+        } catch (PDOException $e) {
+            error_log("Error verifying email: " . $e->getMessage());
+            return false;
+        }
     }
 } 

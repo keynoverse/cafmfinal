@@ -1,6 +1,6 @@
 <?php
 require_once '../config/config.php';
-require_once '../controllers/AuthController.php';
+require_once PROJECT_ROOT . '/controllers/AuthController.php';
 
 $auth = new AuthController($conn);
 if ($auth->isLoggedIn()) {
