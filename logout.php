@@ -1,9 +1,10 @@
 <?php
 require_once 'config/config.php';
-require_once 'controllers/AuthController.php';
+require_once PROJECT_ROOT . '/controllers/AuthController.php';
 
 $auth = new AuthController($conn);
 $auth->logout();
 
-header('Location: login.php');
+// Redirect to the login page
+header('Location: public/login.php');
 exit; 

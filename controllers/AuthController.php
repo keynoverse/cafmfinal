@@ -13,51 +13,51 @@ class AuthController {
     }
     
     public function login($email, $password) {
-        $stmt = $this->conn->prepare("
-            SELECT id, name, email, password_hash, user_type, is_verified, is_active 
-            FROM users 
-            WHERE email = ?
-        ");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT id, name, email, password_hash, user_type, is_verified, is_active 
+                FROM users 
+                WHERE email = ?
+            ");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows === 0) {
-            throw new Exception('Invalid email or password.');
+            if ($result->num_rows === 0) {
+                return false;
+            }
+
+            $user = $result->fetch_assoc();
+
+            if (!password_verify($password, $user['password_hash'])) {
+                return false;
+            }
+
+            if (!$user['is_verified']) {
+                return false;
+            }
+
+            if (!$user['is_active']) {
+                return false;
+            }
+
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_type'] = $user['user_type'];
+            $_SESSION['last_activity'] = time();
+
+            // Update last login timestamp
+            $stmt = $this->conn->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+            $stmt->bind_param("i", $user['id']);
+            $stmt->execute();
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Login error: " . $e->getMessage());
+            return false;
         }
-
-        $user = $result->fetch_assoc();
-
-        if (!password_verify($password, $user['password_hash'])) {
-            throw new Exception('Invalid email or password.');
-        }
-
-        if (!$user['is_verified']) {
-            throw new Exception('Please verify your email address before logging in.');
-        }
-
-        if (!$user['is_active']) {
-            throw new Exception('Your account has been deactivated. Please contact support.');
-        }
-
-        // Set session variables
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_type'] = $user['user_type'];
-        $_SESSION['last_activity'] = time();
-
-        // Update last login timestamp
-        $stmt = $this->conn->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
-        $stmt->bind_param("i", $user['id']);
-        $stmt->execute();
-
-        return [
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'user_type' => $user['user_type']
-        ];
     }
     
     public function logout() {
@@ -89,10 +89,34 @@ class AuthController {
     }
     
     public function getCurrentUser() {
-        if ($this->isLoggedIn()) {
-            return $this->userModel->getUserByEmail($_SESSION['user_email']);
+        if (!isset($_SESSION['user_id'])) {
+            return null;
         }
-        return null;
+        
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT id, name, email, user_type, is_verified, is_active, last_login, created_at 
+                FROM users 
+                WHERE id = ?
+            ");
+            $stmt->bind_param("i", $_SESSION['user_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($result->num_rows === 0) {
+                return null;
+            }
+            
+            return $result->fetch_assoc();
+        } catch (Exception $e) {
+            error_log("Error fetching current user: " . $e->getMessage());
+            return [
+                'id' => $_SESSION['user_id'],
+                'name' => $_SESSION['user_name'] ?? 'Unknown User',
+                'email' => $_SESSION['user_email'] ?? '',
+                'user_type' => $_SESSION['user_type'] ?? 'Unknown'
+            ];
+        }
     }
 
     public function verifyEmail($token) {
