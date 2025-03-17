@@ -1,0 +1,3 @@
+mkdir -p CAFM-Project/{assets/{css,js,images},config,controllers,includes,models,modules,views}
+mkdir -p CAFM-Project/modules/{asset-management,energy-management,facility-management,client-master,vendor-master,user-management,smart-building,iot-integration,mobile-workforce,analytics,sustainability,security-risk,collaboration,emergency,financial}
+touch CAFM-Project/{index.php,login.php,logout.php,dashboard.php,routes.php,.htaccess,README.md} 

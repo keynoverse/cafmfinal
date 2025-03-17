@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cafm_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - cafm_network
+
+  db:
+    image: mysql:8.0
+    container_name: cafm_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: cafm_db
+      MYSQL_USER: cafm_user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - cafm_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: cafm_phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - cafm_network
+
+networks:
+  cafm_network:
+    driver: bridge
+
+volumes:
+  dbdata: 
