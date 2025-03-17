@@ -210,4 +210,162 @@ document.querySelectorAll('input[type="email"]').forEach(input => {
             }
         }, 500);
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to show registration form based on user type
+    window.showRegistrationForm = function(userType) {
+        document.querySelectorAll('.registration-form').forEach(form => {
+            form.style.display = 'none';
+        });
+        
+        document.getElementById('userTypeForm').style.display = 'none';
+        document.getElementById(userType + 'Form').style.display = 'block';
+    };
+
+    // Function to show user type selection
+    window.showUserTypeSelection = function() {
+        document.querySelectorAll('.registration-form').forEach(form => {
+            form.style.display = 'none';
+        });
+        
+        document.getElementById('userTypeForm').style.display = 'block';
+    };
+
+    // Company type toggle for tenant registration
+    const companyTypeSelect = document.querySelector('select[name="company_type"]');
+    if (companyTypeSelect) {
+        companyTypeSelect.addEventListener('change', function() {
+            const nonExpoFields = document.getElementById('nonExpoFields');
+            const expoFields = document.getElementById('expoFields');
+            
+            if (this.value === 'expo') {
+                nonExpoFields.style.display = 'none';
+                expoFields.style.display = 'block';
+            } else {
+                nonExpoFields.style.display = 'block';
+                expoFields.style.display = 'none';
+            }
+        });
+    }
+
+    // Form validation and submission
+    document.querySelectorAll('.registration-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm(this)) {
+                return;
+            }
+
+            try {
+                const formData = new FormData(this);
+                const response = await fetch('../controllers/register.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('success', 'Registration successful! Please check your email for verification.');
+                    setTimeout(() => {
+                        window.location.href = '../login.php';
+                    }, 3000);
+                } else {
+                    showMessage('error', result.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error', 'An error occurred. Please try again later.');
+            }
+        });
+    });
+
+    // Form validation function
+    function validateForm(form) {
+        let isValid = true;
+        
+        // Clear previous error messages
+        form.querySelectorAll('.error-message').forEach(msg => msg.remove());
+        
+        // Validate required fields
+        form.querySelectorAll('[required]').forEach(field => {
+            if (!field.value.trim()) {
+                showFieldError(field, 'This field is required');
+                isValid = false;
+            }
+        });
+        
+        // Validate email format
+        const emailField = form.querySelector('input[type="email"]');
+        if (emailField && emailField.value.trim() && !isValidEmail(emailField.value)) {
+            showFieldError(emailField, 'Please enter a valid email address');
+            isValid = false;
+        }
+        
+        // Validate mobile number format
+        const mobileField = form.querySelector('input[name="mobile"]');
+        if (mobileField && mobileField.value.trim() && !isValidMobile(mobileField.value)) {
+            showFieldError(mobileField, 'Please enter a valid mobile number');
+            isValid = false;
+        }
+        
+        // Validate file uploads
+        form.querySelectorAll('input[type="file"]').forEach(fileField => {
+            if (fileField.required && !fileField.files.length) {
+                showFieldError(fileField, 'Please select a file');
+                isValid = false;
+            } else if (fileField.files.length) {
+                const file = fileField.files[0];
+                if (!isValidFileType(file, fileField.accept)) {
+                    showFieldError(fileField, 'Invalid file type');
+                    isValid = false;
+                }
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    showFieldError(fileField, 'File size should not exceed 5MB');
+                    isValid = false;
+                }
+            }
+        });
+        
+        return isValid;
+    }
+
+    // Helper functions
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidMobile(mobile) {
+        return /^\+?[\d\s-]{10,}$/.test(mobile);
+    }
+
+    function isValidFileType(file, acceptedTypes) {
+        const acceptedExtensions = acceptedTypes.split(',').map(type => 
+            type.trim().toLowerCase().replace('*', '')
+        );
+        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+        return acceptedExtensions.includes(fileExtension);
+    }
+
+    function showFieldError(field, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message text-danger';
+        errorDiv.textContent = message;
+        field.parentNode.appendChild(errorDiv);
+    }
+
+    function showMessage(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} mt-3`;
+        alertDiv.textContent = message;
+        
+        const container = document.querySelector('.register-box');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
 }); 

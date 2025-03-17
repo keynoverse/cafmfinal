@@ -31,8 +31,8 @@ if ($auth->isLoggedIn()) {
                 <a href="#modules">Modules</a>
                 <a href="#benefits">Benefits</a>
                 <a href="#contact">Contact</a>
-                <a href="/login.php" class="btn btn-primary">Login</a>
-                <a href="/register.php" class="btn btn-outline">Register</a>
+                <a href="public/login.php" class="btn btn-primary">Login</a>
+                <a href="public/register.php" class="btn btn-outline">Register</a>
             </div>
             <div class="menu-toggle">
                 <span></span>
@@ -47,7 +47,7 @@ if ($auth->isLoggedIn()) {
             <h1>Next-Generation Facility Management</h1>
             <p>AI-Powered CAFM System for Smart Building Management</p>
             <div class="hero-buttons">
-                <a href="register.php" class="btn btn-primary">Get Started</a>
+                <a href="public/register.php" class="btn btn-primary">Get Started</a>
                 <a href="#demo" class="btn btn-secondary">Watch Demo</a>
             </div>
         </div>
