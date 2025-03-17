@@ -26,6 +26,7 @@ $userTypes = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - CAFM System</title>
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/register.css">
     <link rel="stylesheet" href="../assets/css/dark-mode.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -63,5 +64,54 @@ $userTypes = [
 
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/register-validation.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize form validation for all registration forms
+        document.querySelectorAll('.registration-form').forEach(form => {
+            const validator = new FormValidator(form);
+            
+            // Add form submission handler
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!validator.validate()) {
+                    return;
+                }
+
+                try {
+                    const formData = new FormData(this);
+                    formData.append('formId', this.id);
+                    
+                    const response = await fetch('register_handler.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        window.location.href = 'registration_success.php';
+                    } else {
+                        showMessage('error', result.message || 'Registration failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage('error', 'An error occurred. Please try again later.');
+                }
+            });
+        });
+    });
+
+    function showMessage(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+        alertDiv.textContent = message;
+        
+        const container = document.querySelector('.register-box');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => alertDiv.remove(), 5000);
+    }
+    </script>
 </body>
-</html> 
+</html>

@@ -15,8 +15,15 @@ try {
         throw new Exception('Please fill in all required fields.');
     }
     
+    // Validate email format
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         throw new Exception('Invalid email format.');
+    }
+    
+    // Validate mobile number
+    $cleanMobile = preg_replace('/[^0-9]/', '', $_POST['mobile']);
+    if (strlen($cleanMobile) < 10 || strlen($cleanMobile) > 15) {
+        throw new Exception('Mobile number must be between 10 and 15 digits.');
     }
     
     // Check if email already exists
@@ -27,22 +34,93 @@ try {
         throw new Exception('Email already registered.');
     }
     
+    // Validate user type specific fields
+    switch ($userType) {
+        case 'tenant':
+            if (empty($_POST['company_type'])) {
+                throw new Exception('Company type is required.');
+            }
+            if ($_POST['company_type'] === 'non_expo' && empty($_POST['company_name'])) {
+                throw new Exception('Company name is required for non-Expo companies.');
+            }
+            if ($_POST['company_type'] === 'expo' && empty($_POST['department'])) {
+                throw new Exception('Department is required for Expo companies.');
+            }
+            break;
+            
+        case 'service_provider':
+            if (empty($_POST['company_name'])) {
+                throw new Exception('Company name is required.');
+            }
+            if (empty($_POST['categories'])) {
+                throw new Exception('Please select at least one service category.');
+            }
+            break;
+            
+        case 'client_enquiry':
+            if (empty($_POST['department']) || empty($_POST['employee_id'])) {
+                throw new Exception('Department and Employee ID are required.');
+            }
+            break;
+            
+        case 'landlord':
+            if (empty($_POST['organization']) || empty($_POST['position'])) {
+                throw new Exception('Organization and Position are required.');
+            }
+            break;
+            
+        case 'manager':
+            if (empty($_POST['department']) || empty($_POST['employee_id']) || empty($_POST['access_level'])) {
+                throw new Exception('Department, Employee ID, and Access Level are required.');
+            }
+            break;
+            
+        default:
+            throw new Exception('Invalid user type.');
+    }
+    
     // Handle file uploads
     $uploadedFiles = [];
     if (!empty($_FILES)) {
+        $uploadDir = '../uploads/';
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        
         foreach ($_FILES as $fieldName => $fileInfo) {
             if ($fileInfo['error'] === UPLOAD_ERR_OK) {
+                // Validate file type
+                $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                $fileType = mime_content_type($fileInfo['tmp_name']);
+                if (!in_array($fileType, $allowedTypes)) {
+                    throw new Exception("Invalid file type for {$fieldName}. Only JPG, PNG, and PDF files are allowed.");
+                }
+                
+                // Validate file size (5MB limit)
+                if ($fileInfo['size'] > 5 * 1024 * 1024) {
+                    throw new Exception("File size for {$fieldName} exceeds 5MB limit.");
+                }
+                
                 $fileName = time() . '_' . basename($fileInfo['name']);
-                $uploadPath = '../uploads/' . $fileName;
+                $uploadPath = $uploadDir . $fileName;
                 
                 if (!move_uploaded_file($fileInfo['tmp_name'], $uploadPath)) {
-                    throw new Exception('Failed to upload ' . $fieldName);
+                    throw new Exception("Failed to upload {$fieldName}");
                 }
                 
                 $uploadedFiles[$fieldName] = $fileName;
             }
         }
     }
+    
+    // Generate verification token
+    $verificationToken = bin2hex(random_bytes(32));
+    
+    // Insert user data
+    $stmt = $conn->prepare("
+        INSERT INTO users (name, email, mobile, user_type, verification_token, additional_data, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, NOW())
+    ");
     
     // Prepare additional data based on user type
     $additionalData = [];
@@ -60,8 +138,8 @@ try {
         case 'service_provider':
             $additionalData = [
                 'company_name' => $_POST['company_name'],
-                'categories' => implode(',', $_POST['categories']),
-                'trade_license' => $uploadedFiles['trade_license']
+                'categories' => is_array($_POST['categories']) ? implode(',', $_POST['categories']) : $_POST['categories'],
+                'trade_license' => $uploadedFiles['trade_license'] ?? null
             ];
             break;
             
@@ -76,7 +154,7 @@ try {
             $additionalData = [
                 'organization' => $_POST['organization'],
                 'position' => $_POST['position'],
-                'auth_document' => $uploadedFiles['auth_document']
+                'auth_document' => $uploadedFiles['auth_document'] ?? null
             ];
             break;
             
@@ -87,19 +165,7 @@ try {
                 'access_level' => $_POST['access_level']
             ];
             break;
-            
-        default:
-            throw new Exception('Invalid user type.');
     }
-    
-    // Generate verification token
-    $verificationToken = bin2hex(random_bytes(32));
-    
-    // Insert user data
-    $stmt = $conn->prepare("
-        INSERT INTO users (name, email, mobile, user_type, verification_token, additional_data, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, NOW())
-    ");
     
     $additionalDataJson = json_encode($additionalData);
     $stmt->bind_param("ssssss", 
@@ -150,6 +216,7 @@ try {
     ]);
     
 } catch (Exception $e) {
+    error_log("Registration error: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'success' => false,
