@@ -42,5 +42,9 @@ $visibleMenus = array_map(
     })
 );
 
+// Debugging output
+error_log('User Role ID: ' . $user['role_id']);
+error_log('Permissions: ' . json_encode($permissions));
+
 header('Content-Type: application/json');
 echo json_encode($visibleMenus); 
