@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/config.php';
+require_once PROJECT_ROOT . '/config/config.php';
 require_once PROJECT_ROOT . '/controllers/AuthController.php';
 require_once PROJECT_ROOT . '/controllers/SettingsController.php';
 
