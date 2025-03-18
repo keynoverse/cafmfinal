@@ -15,7 +15,7 @@ if (!$auth->isLoggedIn()) {
 }
 
 $user = $auth->getCurrentUser();
-if (!isset($user['role_id']) || $user['role_id'] != 1) {
+if (!isset($user['role_id']) || $user['role_id'] != 29) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;
