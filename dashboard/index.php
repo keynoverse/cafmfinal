@@ -13,10 +13,18 @@ $user = $auth->getCurrentUser();
 // Fetch user role ID
 $roleId = $user['role_id'];
 
-// Query visible menu items for the user's role
-$stmt = $conn->prepare("SELECT menu_id FROM menu_permissions WHERE role_id = ? AND is_visible = 1");
-$stmt->execute([$roleId]);
-$visibleMenuIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+// Check if the user is a master admin
+if (isset($user['role_id']) && $user['role_id'] == 1) { // Assuming role_id 1 is master admin
+    // Fetch all menu IDs
+    $stmt = $conn->prepare("SELECT id FROM menu_items");
+    $stmt->execute();
+    $visibleMenuIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+} else {
+    // Query visible menu items for the user's role
+    $stmt = $conn->prepare("SELECT menu_id FROM menu_permissions WHERE role_id = ? AND is_visible = 1");
+    $stmt->execute([$roleId]);
+    $visibleMenuIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
 
 // Function to check if a menu item is visible
 function isMenuItemVisible($menuId, $visibleMenuIds) {
