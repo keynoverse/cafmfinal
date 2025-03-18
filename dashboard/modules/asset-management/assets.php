@@ -1,6 +1,6 @@
 <?php
-require_once '../../includes/header.php';
-require_once '../../includes/navigation.php';
+require_once '../../../includes/header.php';
+require_once '../../../includes/navigation.php';
 ?>
 
 <div class="main-content">
@@ -101,5 +101,5 @@ function closeAssetModal() {
 </script>
 
 <?php
-require_once '../../includes/footer.php';
+require_once '../../../includes/footer.php';
 ?>
