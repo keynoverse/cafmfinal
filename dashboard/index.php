@@ -1,7 +1,7 @@
 <?php
 require_once '../config/config.php';
 require_once PROJECT_ROOT . '/controllers/AuthController.php';
-require_once PROJECT_ROOT . '/controllers/get_menu_permissions.php';
+require_once PROJECT_ROOT . '/dashboard/ajax/get_menu_permissions.php';
 
 $auth = new AuthController($conn);
 if (!$auth->isLoggedIn()) {
