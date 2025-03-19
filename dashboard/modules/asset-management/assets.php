@@ -311,99 +311,578 @@ $user = $auth->getCurrentUser();
 
         <div class="main-content">
             <div class="content-header">
-                <h1>Asset Management</h1>
-                <button class="btn btn-primary" onclick="openAssetModal()">Add New Asset</button>
+                <div class="header-left">
+                    <h1>Asset Management</h1>
+                    <div class="breadcrumb">
+                        <a href="../../../dashboard/index.php">Dashboard</a> / 
+                        <span>Asset Management</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openAssetModal()">
+                        <i class="fas fa-plus"></i> Add New Asset
+                    </button>
+                    <button class="btn btn-outline" onclick="toggleFilters()">
+                        <i class="fas fa-filter"></i> Filters
+                    </button>
+                    <button class="btn btn-outline" onclick="exportAssets()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
             </div>
 
-            <!-- Summary Cards -->
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Total Assets</h3>
-                    <p>100</p>
+            <!-- Analytics Cards -->
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="card-icon bg-primary">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Assets</h3>
+                        <p class="number">1,234</p>
+                        <span class="trend positive">+5% from last month</span>
+                    </div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Categories</h3>
-                    <p>5</p>
+                <div class="analytics-card">
+                    <div class="card-icon bg-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Active Assets</h3>
+                        <p class="number">987</p>
+                        <span class="trend">80% of total</span>
+                    </div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Active Assets</h3>
-                    <p>80</p>
+                <div class="analytics-card">
+                    <div class="card-icon bg-warning">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Under Maintenance</h3>
+                        <p class="number">45</p>
+                        <span class="trend negative">+12% from last week</span>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <div class="card-icon bg-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Critical Issues</h3>
+                        <p class="number">8</p>
+                        <span class="trend">Requires attention</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Search and Filters -->
-            <div class="filters">
-                <input type="text" placeholder="Search assets..." class="form-control">
-                <select class="form-control">
-                    <option value="">All Categories</option>
-                    <option value="1">Category 1</option>
-                    <option value="2">Category 2</option>
-                </select>
-                <select class="form-control">
-                    <option value="">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+            <!-- Quick Actions -->
+            <div class="quick-actions-grid">
+                <div class="action-card">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Generate QR Code</span>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Asset Report</span>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Maintenance Schedule</span>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance Analytics</span>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-history"></i>
+                    <span>Maintenance History</span>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Warranty Details</span>
+                </div>
+            </div>
+
+            <!-- Advanced Filters Panel -->
+            <div id="filtersPanel" class="filters-panel">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label>Search</label>
+                        <input type="text" class="form-control" placeholder="Search assets...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select class="form-control">
+                            <option value="">All Categories</option>
+                            <option value="mechanical">Mechanical</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="hvac">HVAC</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select class="form-control">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <select class="form-control">
+                            <option value="">All Locations</option>
+                            <option value="building1">Building 1</option>
+                            <option value="building2">Building 2</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Purchase Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label>Warranty Status</label>
+                        <select class="form-control">
+                            <option value="">All</option>
+                            <option value="active">Active</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filters-actions">
+                    <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+                    <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                </div>
             </div>
 
             <!-- Assets Table -->
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Assets List</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Location</th>
-                                <th>Purchase Date</th>
-                                <th>Value</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Asset rows will go here -->
-                        </tbody>
-                    </table>
-                    <!-- Pagination -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" onclick="toggleAllCheckboxes(this)"></th>
+                            <th>Asset ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Purchase Date</th>
+                            <th>Last Maintenance</th>
+                            <th>Next Service</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample row -->
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>AST001</td>
+                            <td>Air Handling Unit</td>
+                            <td>HVAC</td>
+                            <td>Building 1 - Floor 3</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                            <td>2023-01-15</td>
+                            <td>2024-01-10</td>
+                            <td>2024-04-10</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" title="Edit" onclick="openAssetModal('AST001')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Maintenance History">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                    <button class="btn-icon" title="More Actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-info">Showing 1-10 of 1,234 assets</div>
                     <div class="pagination">
-                        <button class="btn">Previous</button>
-                        <button class="btn">Next</button>
+                        <button class="btn btn-outline" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-outline active">1</button>
+                        <button class="btn btn-outline">2</button>
+                        <button class="btn btn-outline">3</button>
+                        <span>...</span>
+                        <button class="btn btn-outline">124</button>
+                        <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Asset Modal -->
+    <!-- Add/Edit Asset Modal -->
     <div id="assetModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAssetModal()">&times;</span>
-            <h2>Add/Edit Asset</h2>
-            <form>
-                <input type="text" placeholder="Asset Name" class="form-control">
-                <input type="text" placeholder="Category" class="form-control">
-                <input type="text" placeholder="Location" class="form-control">
-                <input type="date" placeholder="Purchase Date" class="form-control">
-                <input type="number" placeholder="Value" class="form-control">
-                <select class="form-control">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </form>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Add New Asset</h2>
+                <button class="close" onclick="closeAssetModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assetForm" class="form-grid">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Asset Name*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Asset ID*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category*</label>
+                                <div class="input-group">
+                                    <select class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <option value="hvac">HVAC</option>
+                                        <option value="electrical">Electrical</option>
+                                        <option value="mechanical">Mechanical</option>
+                                    </select>
+                                    <button type="button" class="btn btn-icon" onclick="openCategoryModal()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Subcategory</label>
+                                <select class="form-control">
+                                    <option value="">Select Subcategory</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location & Installation -->
+                    <div class="form-section">
+                        <h3>Location & Installation</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Building*</label>
+                                <select class="form-control" required>
+                                    <option value="">Select Building</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Floor*</label>
+                                <select class="form-control" required>
+                                    <option value="">Select Floor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Room/Area</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Installation Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Commissioned Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Procurement Details -->
+                    <div class="form-section">
+                        <h3>Procurement Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Vendor*</label>
+                                <div class="input-group">
+                                    <select class="form-control" required>
+                                        <option value="">Select Vendor</option>
+                                    </select>
+                                    <button type="button" class="btn btn-icon" onclick="openVendorModal()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Purchase Date*</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Purchase Cost*</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>PO Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Specifications -->
+                    <div class="form-section">
+                        <h3>Technical Specifications</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Manufacturer*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Model Number*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Serial Number*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Capacity/Rating</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warranty Information -->
+                    <div class="form-section">
+                        <h3>Warranty Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Warranty Start Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Warranty End Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Warranty Terms</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Schedule -->
+                    <div class="form-section">
+                        <h3>Maintenance Schedule</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Maintenance Frequency*</label>
+                                <select class="form-control" required>
+                                    <option value="">Select Frequency</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="semi-annual">Semi-Annual</option>
+                                    <option value="annual">Annual</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Next Service Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Attachments</label>
+                            <input type="file" class="form-control" multiple>
+                            <small class="form-text">Upload manuals, certificates, or other relevant documents</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAssetModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveAsset()">Save Asset</button>
+            </div>
         </div>
     </div>
 
+    <!-- Add Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Category</h2>
+                <button class="close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label>Category Name*</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Parent Category</label>
+                        <select class="form-control">
+                            <option value="">None (Top Level)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCategory()">Save Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Vendor Modal -->
+    <div id="vendorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Vendor</h2>
+                <button class="close" onclick="closeVendorModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vendorForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Vendor Name*</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Person*</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email*</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone*</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Service Categories</label>
+                        <select class="form-control" multiple>
+                            <option value="hvac">HVAC</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="mechanical">Mechanical</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeVendorModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveVendor()">Save Vendor</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../assets/js/main.js"></script>
     <script>
-    function openAssetModal() {
+    // Modal functions
+    function openAssetModal(assetId = null) {
         document.getElementById('assetModal').style.display = 'block';
+        if (assetId) {
+            // Load asset data for editing
+            loadAssetData(assetId);
+        }
     }
 
     function closeAssetModal() {
         document.getElementById('assetModal').style.display = 'none';
+    }
+
+    function openCategoryModal() {
+        document.getElementById('categoryModal').style.display = 'block';
+    }
+
+    function closeCategoryModal() {
+        document.getElementById('categoryModal').style.display = 'none';
+    }
+
+    function openVendorModal() {
+        document.getElementById('vendorModal').style.display = 'block';
+    }
+
+    function closeVendorModal() {
+        document.getElementById('vendorModal').style.display = 'none';
+    }
+
+    // Filter functions
+    function toggleFilters() {
+        const filtersPanel = document.getElementById('filtersPanel');
+        filtersPanel.classList.toggle('show');
+    }
+
+    function resetFilters() {
+        document.querySelectorAll('#filtersPanel .form-control').forEach(input => {
+            input.value = '';
+        });
+    }
+
+    function applyFilters() {
+        // Implement filter logic
+        toggleFilters();
+    }
+
+    // Table functions
+    function toggleAllCheckboxes(source) {
+        const checkboxes = document.querySelectorAll('table input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+
+    // Export function
+    function exportAssets() {
+        // Implement export logic
+    }
+
+    // Save functions
+    function saveAsset() {
+        // Implement save logic
+        closeAssetModal();
+    }
+
+    function saveCategory() {
+        // Implement save logic
+        closeCategoryModal();
+    }
+
+    function saveVendor() {
+        // Implement save logic
+        closeVendorModal();
+    }
+
+    // Load asset data for editing
+    function loadAssetData(assetId) {
+        // Implement load logic
     }
     </script>
 </body>

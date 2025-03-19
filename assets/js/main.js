@@ -26,16 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mobile menu toggle with animation
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
+    // Initialize navigation menu
+    initializeNavigation();
     
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('nav-active');
-            menuToggle.classList.toggle('toggle-active');
-        });
-    }
+    // Initialize modals
+    initializeModals();
+    
+    // Initialize any other components
+    initializeComponents();
 
     // Smooth scroll with premium easing
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -165,13 +163,148 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Initial check
-
-    // Initialize any interactive components
-    initializeComponents();
 });
 
-// Initialize UI components
+function initializeNavigation() {
+    // Handle submenu toggles
+    const submenuToggles = document.querySelectorAll('.has-submenu > a');
+    submenuToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const parent = this.parentElement;
+            
+            // Close other open submenus
+            const openMenus = document.querySelectorAll('.has-submenu.open');
+            openMenus.forEach(menu => {
+                if (menu !== parent) {
+                    menu.classList.remove('open');
+                }
+            });
+            
+            // Toggle current submenu
+            parent.classList.toggle('open');
+        });
+    });
+
+    // Handle mobile menu toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-open');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 992 && 
+                !e.target.closest('.sidebar') && 
+                !e.target.closest('.menu-toggle')) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+    }
+
+    // Set active menu item based on current page
+    setActiveMenuItem();
+}
+
+function initializeModals() {
+    // Get all modal triggers
+    const modalTriggers = document.querySelectorAll('[data-modal]');
+    
+    modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modalId = this.getAttribute('data-modal');
+            openModal(modalId);
+        });
+    });
+
+    // Close modal handlers
+    const closeButtons = document.querySelectorAll('.modal .close, .modal .btn-close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            closeModal(modal.id);
+        });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            closeModal(e.target.id);
+        }
+    });
+}
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+function setActiveMenuItem() {
+    const currentPath = window.location.pathname;
+    const menuItems = document.querySelectorAll('.sidebar-nav a');
+    
+    menuItems.forEach(item => {
+        if (item.getAttribute('href') === '#') return;
+        
+        const href = item.getAttribute('href');
+        if (currentPath.includes(href)) {
+            // Remove active class from all items
+            menuItems.forEach(i => i.parentElement.classList.remove('active'));
+            
+            // Add active class to current item
+            item.parentElement.classList.add('active');
+            
+            // If it's in a submenu, open the parent menu
+            const submenu = item.closest('.submenu');
+            if (submenu) {
+                submenu.parentElement.classList.add('open');
+            }
+        }
+    });
+}
+
 function initializeComponents() {
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[data-tooltip]');
+    tooltips.forEach(tooltip => {
+        tooltip.addEventListener('mouseenter', showTooltip);
+        tooltip.addEventListener('mouseleave', hideTooltip);
+    });
+
+    // Initialize dropdowns
+    const dropdowns = document.querySelectorAll('.dropdown-toggle');
+    dropdowns.forEach(dropdown => {
+        dropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.nextElementSibling.classList.toggle('show');
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.matches('.dropdown-toggle')) {
+            const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+
     // Statistics counter animation
     const stats = document.querySelectorAll('.stat-item p');
     if (stats.length) {
@@ -266,4 +399,25 @@ const shakeKeyframes = `
 
 const style = document.createElement('style');
 style.textContent = shakeKeyframes;
-document.head.appendChild(style); 
+document.head.appendChild(style);
+
+// Utility functions
+function showTooltip(e) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = this.getAttribute('data-tooltip');
+    document.body.appendChild(tooltip);
+
+    const rect = this.getBoundingClientRect();
+    tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+    tooltip.style.left = rect.left + (rect.width - tooltip.offsetWidth) / 2 + 'px';
+}
+
+function hideTooltip() {
+    const tooltips = document.querySelectorAll('.tooltip');
+    tooltips.forEach(tooltip => tooltip.remove());
+}
+
+// Export functions for use in other files
+window.openModal = openModal;
+window.closeModal = closeModal; 
