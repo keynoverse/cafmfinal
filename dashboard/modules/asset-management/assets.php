@@ -44,7 +44,267 @@ $user = $auth->getCurrentUser();
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <!-- Add more navigation items here -->
+
+                    <!-- Core Modules -->
+                    <div class="module-group">
+                        <div class="module-group-title">Core Modules</div>
+                        
+                        <li class="has-submenu active">
+                            <a href="#">
+                                <i class="fas fa-boxes"></i>
+                                <span>Asset Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="active"><a href="../../../dashboard/modules/asset-management/assets.php">Asset Master</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/categories.php">Categories</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/lifecycle.php">Lifecycle Management</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/inventory.php">Inventory</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/qr-codes.php">QR/Barcode</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/warranty.php">Warranty Management</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/performance.php">Performance Monitoring</a></li>
+                                <li><a href="../../../dashboard/modules/asset-management/documentation.php">Documentation</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-building"></i>
+                                <span>Facility Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/facility-management/work-orders.php">Work Orders</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/ppm.php">PPM</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/complaints.php">Complaints</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/sla.php">SLA Management</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/space.php">Space Management</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/occupancy.php">Occupancy Tracking</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/room-booking.php">Room Booking</a></li>
+                                <li><a href="../../../dashboard/modules/facility-management/move.php">Move Management</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-users"></i>
+                                <span>Client Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/client-master/clients.php">Client Directory</a></li>
+                                <li><a href="../../../dashboard/modules/client-master/portal.php">Client Portal</a></li>
+                                <li><a href="../../../dashboard/modules/client-master/satisfaction.php">Satisfaction Tracking</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-handshake"></i>
+                                <span>Vendor Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/vendor-master/vendors.php">Vendor Directory</a></li>
+                                <li><a href="../../../dashboard/modules/vendor-master/performance.php">Performance Metrics</a></li>
+                                <li><a href="../../../dashboard/modules/vendor-master/contracts.php">Contracts</a></li>
+                            </ul>
+                        </li>
+                    </div>
+                    
+                    <!-- Smart Building -->
+                    <div class="module-group">
+                        <div class="module-group-title">Smart Building</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-robot"></i>
+                                <span>AI & ML</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/smart-building/predictive.php">Predictive Maintenance</a></li>
+                                <li><a href="../../../dashboard/modules/smart-building/optimization.php">Space Optimization</a></li>
+                                <li><a href="../../../dashboard/modules/smart-building/analytics.php">Usage Analytics</a></li>
+                                <li><a href="../../../dashboard/modules/smart-building/anomaly.php">Anomaly Detection</a></li>
+                                <li><a href="../../../dashboard/modules/smart-building/pattern.php">Pattern Recognition</a></li>
+                                <li><a href="../../../dashboard/modules/smart-building/risk.php">Risk Assessment</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-network-wired"></i>
+                                <span>IoT Integration</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/iot-integration/sensors.php">Sensor Network</a></li>
+                                <li><a href="../../../dashboard/modules/iot-integration/monitoring.php">Environmental Monitoring</a></li>
+                                <li><a href="../../../dashboard/modules/iot-integration/alerts.php">Real-time Alerts</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-bolt"></i>
+                                <span>Energy Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/energy-management/consumption.php">Consumption Monitoring</a></li>
+                                <li><a href="../../../dashboard/modules/energy-management/optimization.php">Energy Optimization</a></li>
+                                <li><a href="../../../dashboard/modules/energy-management/sustainability.php">Sustainability Metrics</a></li>
+                            </ul>
+                        </li>
+                    </div>
+                    
+                    <!-- Operations -->
+                    <div class="module-group">
+                        <div class="module-group-title">Operations</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Mobile Workforce</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/mobile-workforce/tracking.php">GPS Tracking</a></li>
+                                <li><a href="../../../dashboard/modules/mobile-workforce/tasks.php">Task Management</a></li>
+                                <li><a href="../../../dashboard/modules/mobile-workforce/documentation.php">Photo Documentation</a></li>
+                                <li><a href="../../../dashboard/modules/mobile-workforce/resource.php">Resource Allocation</a></li>
+                                <li><a href="../../../dashboard/modules/mobile-workforce/cost.php">Cost Tracking</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Security & Risk</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/security-risk/access.php">Access Control</a></li>
+                                <li><a href="../../../dashboard/modules/security-risk/incidents.php">Incident Reporting</a></li>
+                                <li><a href="../../../dashboard/modules/security-risk/compliance.php">Safety Compliance</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Emergency Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/emergency/plans.php">Emergency Plans</a></li>
+                                <li><a href="../../../dashboard/modules/emergency/drills.php">Drills & Training</a></li>
+                                <li><a href="../../../dashboard/modules/emergency/contacts.php">Emergency Contacts</a></li>
+                            </ul>
+                        </li>
+                    </div>
+                    
+                    <!-- Analytics & Finance -->
+                    <div class="module-group">
+                        <div class="module-group-title">Analytics & Finance</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Analytics & Reporting</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/analytics/dashboards.php">Custom Dashboards</a></li>
+                                <li><a href="../../../dashboard/modules/analytics/reports.php">Report Builder</a></li>
+                                <li><a href="../../../dashboard/modules/analytics/kpi.php">KPI Tracking</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-leaf"></i>
+                                <span>Sustainability</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/sustainability/carbon.php">Carbon Footprint</a></li>
+                                <li><a href="../../../dashboard/modules/sustainability/waste.php">Waste Management</a></li>
+                                <li><a href="../../../dashboard/modules/sustainability/reporting.php">ESG Reporting</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>Financial Control</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/financial/budgeting.php">Budgeting</a></li>
+                                <li><a href="../../../dashboard/modules/financial/invoices.php">Invoice Management</a></li>
+                                <li><a href="../../../dashboard/modules/financial/roi.php">ROI Analysis</a></li>
+                                <li><a href="../../../dashboard/modules/financial/cost-tracking.php">Cost Tracking</a></li>
+                                <li><a href="../../../dashboard/modules/financial/asset-valuation.php">Asset Valuation</a></li>
+                                <li><a href="../../../dashboard/modules/financial/budget-planning.php">Budget Planning</a></li>
+                            </ul>
+                        </li>
+                    </div>
+                    
+                    <!-- System -->
+                    <div class="module-group">
+                        <div class="module-group-title">System</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-user-cog"></i>
+                                <span>User Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/user-management/users.php">Users</a></li>
+                                <li><a href="../../../dashboard/modules/user-management/roles.php">Roles & Permissions</a></li>
+                                <li><a href="../../../dashboard/modules/user-management/activity.php">Activity Log</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="../../../dashboard/profile.php">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="../../../logout.php">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </div>
+
+                    <!-- BIM System -->
+                    <div class="module-group">
+                        <div class="module-group-title">BIM System</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-cube"></i>
+                                <span>BIM Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/bim/viewer.php">3D Model Viewer</a></li>
+                                <li><a href="../../../dashboard/modules/bim/integration.php">BIM Data Integration</a></li>
+                                <li><a href="../../../dashboard/modules/bim/clash.php">Clash Detection</a></li>
+                                <li><a href="../../../dashboard/modules/bim/mep.php">MEP Systems</a></li>
+                                <li><a href="../../../dashboard/modules/bim/planning.php">Construction Planning</a></li>
+                            </ul>
+                        </li>
+                    </div>
+
+                    <!-- Portal Access -->
+                    <div class="module-group">
+                        <div class="module-group-title">Portal Access</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-door-open"></i>
+                                <span>Portals</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="../../../dashboard/modules/portals/tenant.php">Tenant Portal</a></li>
+                                <li><a href="../../../dashboard/modules/portals/landlord.php">Landlord Portal</a></li>
+                                <li><a href="../../../dashboard/modules/portals/vendor.php">Vendor Portal</a></li>
+                            </ul>
+                        </li>
+                    </div>
                 </ul>
             </nav>
         </aside>

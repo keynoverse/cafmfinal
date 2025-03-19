@@ -9,27 +9,6 @@ if (!$auth->isLoggedIn()) {
 }
 
 $user = $auth->getCurrentUser();
-
-// Fetch user role ID
-$roleId = $user['role_id'];
-
-// Check if the user is a master admin
-if (isset($user['role_id']) && $user['role_id'] == 1) { // Assuming role_id 1 is master admin
-    // Fetch all menu IDs
-    $stmt = $conn->prepare("SELECT id FROM menu_items");
-    $stmt->execute();
-    $visibleMenuIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-} else {
-    // Query visible menu items for the user's role
-    $stmt = $conn->prepare("SELECT menu_id FROM menu_permissions WHERE role_id = ? AND is_visible = 1");
-    $stmt->execute([$roleId]);
-    $visibleMenuIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-}
-
-// Function to check if a menu item is visible
-function isMenuItemVisible($menuId, $visibleMenuIds) {
-    return in_array($menuId, $visibleMenuIds);
-}
 ?>
 
 <!DOCTYPE html>
@@ -59,20 +38,17 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
             
             <nav class="sidebar-nav">
                 <ul>
-                    <?php if (isMenuItemVisible(1, $visibleMenuIds)): ?>
                     <li class="active">
                         <a href="index.php">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <?php endif; ?>
 
                     <!-- Core Modules -->
                     <div class="module-group">
                         <div class="module-group-title">Core Modules</div>
                         
-                        <?php if (isMenuItemVisible(3, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-boxes"></i>
@@ -84,11 +60,12 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/asset-management/lifecycle.php">Lifecycle Management</a></li>
                                 <li><a href="modules/asset-management/inventory.php">Inventory</a></li>
                                 <li><a href="modules/asset-management/qr-codes.php">QR/Barcode</a></li>
+                                <li><a href="modules/asset-management/warranty.php">Warranty Management</a></li>
+                                <li><a href="modules/asset-management/performance.php">Performance Monitoring</a></li>
+                                <li><a href="modules/asset-management/documentation.php">Documentation</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(4, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-building"></i>
@@ -99,11 +76,13 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/facility-management/ppm.php">PPM</a></li>
                                 <li><a href="modules/facility-management/complaints.php">Complaints</a></li>
                                 <li><a href="modules/facility-management/sla.php">SLA Management</a></li>
+                                <li><a href="modules/facility-management/space.php">Space Management</a></li>
+                                <li><a href="modules/facility-management/occupancy.php">Occupancy Tracking</a></li>
+                                <li><a href="modules/facility-management/room-booking.php">Room Booking</a></li>
+                                <li><a href="modules/facility-management/move.php">Move Management</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(5, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-users"></i>
@@ -115,9 +94,7 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/client-master/satisfaction.php">Satisfaction Tracking</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(6, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-handshake"></i>
@@ -129,14 +106,12 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/vendor-master/contracts.php">Contracts</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                     </div>
                     
                     <!-- Smart Building -->
                     <div class="module-group">
                         <div class="module-group-title">Smart Building</div>
                         
-                        <?php if (isMenuItemVisible(8, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-robot"></i>
@@ -146,11 +121,12 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/smart-building/predictive.php">Predictive Maintenance</a></li>
                                 <li><a href="modules/smart-building/optimization.php">Space Optimization</a></li>
                                 <li><a href="modules/smart-building/analytics.php">Usage Analytics</a></li>
+                                <li><a href="modules/smart-building/anomaly.php">Anomaly Detection</a></li>
+                                <li><a href="modules/smart-building/pattern.php">Pattern Recognition</a></li>
+                                <li><a href="modules/smart-building/risk.php">Risk Assessment</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(9, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-network-wired"></i>
@@ -162,9 +138,7 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/iot-integration/alerts.php">Real-time Alerts</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(10, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-bolt"></i>
@@ -176,14 +150,12 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/energy-management/sustainability.php">Sustainability Metrics</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                     </div>
                     
                     <!-- Operations -->
                     <div class="module-group">
                         <div class="module-group-title">Operations</div>
                         
-                        <?php if (isMenuItemVisible(12, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-mobile-alt"></i>
@@ -193,11 +165,11 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/mobile-workforce/tracking.php">GPS Tracking</a></li>
                                 <li><a href="modules/mobile-workforce/tasks.php">Task Management</a></li>
                                 <li><a href="modules/mobile-workforce/documentation.php">Photo Documentation</a></li>
+                                <li><a href="modules/mobile-workforce/resource.php">Resource Allocation</a></li>
+                                <li><a href="modules/mobile-workforce/cost.php">Cost Tracking</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(13, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-shield-alt"></i>
@@ -209,9 +181,7 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/security-risk/compliance.php">Safety Compliance</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(14, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -223,14 +193,12 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/emergency/contacts.php">Emergency Contacts</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                     </div>
                     
                     <!-- Analytics & Finance -->
                     <div class="module-group">
                         <div class="module-group-title">Analytics & Finance</div>
                         
-                        <?php if (isMenuItemVisible(16, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-chart-line"></i>
@@ -242,9 +210,7 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/analytics/kpi.php">KPI Tracking</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(17, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-leaf"></i>
@@ -256,9 +222,7 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/sustainability/reporting.php">ESG Reporting</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(18, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-dollar-sign"></i>
@@ -268,16 +232,17 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/financial/budgeting.php">Budgeting</a></li>
                                 <li><a href="modules/financial/invoices.php">Invoice Management</a></li>
                                 <li><a href="modules/financial/roi.php">ROI Analysis</a></li>
+                                <li><a href="modules/financial/cost-tracking.php">Cost Tracking</a></li>
+                                <li><a href="modules/financial/asset-valuation.php">Asset Valuation</a></li>
+                                <li><a href="modules/financial/budget-planning.php">Budget Planning</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                     </div>
                     
                     <!-- System -->
                     <div class="module-group">
                         <div class="module-group-title">System</div>
                         
-                        <?php if (isMenuItemVisible(20, $visibleMenuIds)): ?>
                         <li class="has-submenu">
                             <a href="#">
                                 <i class="fas fa-user-cog"></i>
@@ -289,25 +254,56 @@ function isMenuItemVisible($menuId, $visibleMenuIds) {
                                 <li><a href="modules/user-management/activity.php">Activity Log</a></li>
                             </ul>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(22, $visibleMenuIds)): ?>
                         <li>
                             <a href="profile.php">
                                 <i class="fas fa-user"></i>
                                 <span>My Profile</span>
                             </a>
                         </li>
-                        <?php endif; ?>
                         
-                        <?php if (isMenuItemVisible(23, $visibleMenuIds)): ?>
                         <li>
                             <a href="../logout.php">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Logout</span>
                             </a>
                         </li>
-                        <?php endif; ?>
+                    </div>
+
+                    <!-- BIM System -->
+                    <div class="module-group">
+                        <div class="module-group-title">BIM System</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-cube"></i>
+                                <span>BIM Management</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="modules/bim/viewer.php">3D Model Viewer</a></li>
+                                <li><a href="modules/bim/integration.php">BIM Data Integration</a></li>
+                                <li><a href="modules/bim/clash.php">Clash Detection</a></li>
+                                <li><a href="modules/bim/mep.php">MEP Systems</a></li>
+                                <li><a href="modules/bim/planning.php">Construction Planning</a></li>
+                            </ul>
+                        </li>
+                    </div>
+
+                    <!-- Portal Access -->
+                    <div class="module-group">
+                        <div class="module-group-title">Portal Access</div>
+                        
+                        <li class="has-submenu">
+                            <a href="#">
+                                <i class="fas fa-door-open"></i>
+                                <span>Portals</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="modules/portals/tenant.php">Tenant Portal</a></li>
+                                <li><a href="modules/portals/landlord.php">Landlord Portal</a></li>
+                                <li><a href="modules/portals/vendor.php">Vendor Portal</a></li>
+                            </ul>
+                        </li>
                     </div>
                 </ul>
             </nav>
