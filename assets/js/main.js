@@ -1,7 +1,7 @@
 // Dark mode functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
     // Premium animations for feature cards
@@ -170,19 +170,23 @@ function initializeNavigation() {
     const submenuToggles = document.querySelectorAll('.has-submenu > a');
     submenuToggles.forEach(toggle => {
         toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            const parent = this.parentElement;
-            
-            // Close other open submenus
-            const openMenus = document.querySelectorAll('.has-submenu.open');
-            openMenus.forEach(menu => {
-                if (menu !== parent) {
-                    menu.classList.remove('open');
-                }
-            });
-            
-            // Toggle current submenu
-            parent.classList.toggle('open');
+            // Only prevent default if it's a submenu toggle
+            const href = this.getAttribute('href');
+            if (!href || href === '#' || href === '') {
+                e.preventDefault();
+                const parent = this.parentElement;
+                
+                // Close other open submenus
+                const openMenus = document.querySelectorAll('.has-submenu.open');
+                openMenus.forEach(menu => {
+                    if (menu !== parent) {
+                        menu.classList.remove('open');
+                    }
+                });
+                
+                // Toggle current submenu
+                parent.classList.toggle('open');
+            }
         });
     });
 
@@ -217,7 +221,9 @@ function initializeModals() {
         trigger.addEventListener('click', function(e) {
             e.preventDefault();
             const modalId = this.getAttribute('data-modal');
-            openModal(modalId);
+            if (modalId) {
+                openModal(modalId);
+            }
         });
     });
 
@@ -226,7 +232,9 @@ function initializeModals() {
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const modal = this.closest('.modal');
-            closeModal(modal.id);
+            if (modal) {
+                closeModal(modal.id);
+            }
         });
     });
 
@@ -259,10 +267,8 @@ function setActiveMenuItem() {
     const menuItems = document.querySelectorAll('.sidebar-nav a');
     
     menuItems.forEach(item => {
-        if (item.getAttribute('href') === '#') return;
-        
         const href = item.getAttribute('href');
-        if (currentPath.includes(href)) {
+        if (href && href !== '#' && currentPath.includes(href)) {
             // Remove active class from all items
             menuItems.forEach(i => i.parentElement.classList.remove('active'));
             
@@ -291,7 +297,10 @@ function initializeComponents() {
     dropdowns.forEach(dropdown => {
         dropdown.addEventListener('click', function(e) {
             e.preventDefault();
-            this.nextElementSibling.classList.toggle('show');
+            const menu = this.nextElementSibling;
+            if (menu) {
+                menu.classList.toggle('show');
+            }
         });
     });
 
